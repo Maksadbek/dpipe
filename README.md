@@ -2,6 +2,8 @@
 Tool to pipeline data I/O
 
 ## Requirements
+
+Read data
 - Read data from the given CSV file `hotels.csv`. The first line is a header
    which describes all field names.
 
