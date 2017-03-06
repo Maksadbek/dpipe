@@ -23,6 +23,16 @@ Bonus tasks
 * Unit tests would be nice
 * Add options to sort/group the data before writing it
 
-## Build
+## Build & Install
 
+Make by default builds and installs binary into $GOPATH/bin directory
+```bash
+$ make
+```
+
+Run tests and vet 
+```bash
+$ make vet
+$ make test
+```
 ## How to use
