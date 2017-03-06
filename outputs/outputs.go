@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/maksadbek/dpipe"
+	"github.com/spf13/viper"
 )
 
 type Outputs map[string]dpipe.Output
@@ -16,4 +17,12 @@ func (o Outputs) Add(name string, output dpipe.Output) {
 	}
 }
 
-var AllOutputs Outputs
+// Init initializes all inputs
+// by passing configurations
+func (i Outputs) Init(conf viper.Viper) {
+	for name, output := range All {
+		output.LoadConf(conf.Sub(name))
+	}
+}
+
+var All Outputs
