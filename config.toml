@@ -1,0 +1,19 @@
+[inputs]
+        [inputs.csv]
+                file = "hotels.csv"
+
+[outputs]
+        [outputs.json]
+                file = "hotels.json"
+
+[filters]
+        [filters.nonnegative]
+        field = "stars"
+        filter = "nonnegativ"
+
+[aggregators]
+        [aggregators.group]
+        field = "name"
+
+        [aggregators.sort]
+        field = "stars"
