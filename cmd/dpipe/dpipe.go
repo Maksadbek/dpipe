@@ -4,6 +4,7 @@ import (
 	"flag"
 	"log"
 
+	"github.com/maksadbek/dpipe/agent"
 	"github.com/maksadbek/dpipe/config"
 )
 
@@ -28,4 +29,12 @@ func main() {
 	log.Printf("loaded filters: %+v", config.GetAllKeys(conf.Filters()))
 	log.Printf("loaded aggregators: %+v", config.GetAllKeys(conf.Aggregators()))
 
+	// create new agent
+	agent := agent.New(conf)
+
+	// initialize agent
+	agent.Init()
+
+	// run inputs and outputs
+	agent.Run()
 }

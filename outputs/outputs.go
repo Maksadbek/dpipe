@@ -19,7 +19,7 @@ func (o Outputs) Add(name string, output dpipe.Output) {
 
 // Init initializes all inputs
 // by passing configurations
-func (i Outputs) Init(conf viper.Viper) {
+func (i Outputs) Init(conf *viper.Viper) {
 	for name, output := range All {
 		output.LoadConf(conf.Sub(name))
 	}
