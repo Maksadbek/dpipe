@@ -13,7 +13,7 @@ var (
 )
 
 func main() {
-	log.Println("dpipe")
+	log.Println("DPIPE")
 
 	flag.Parse()
 
@@ -24,10 +24,10 @@ func main() {
 	}
 
 	// log loaded inputs, outpus, filters and aggregators
-	log.Printf("loaded inputs: %+v", config.GetAllKeys(conf.Inputs()))
-	log.Printf("loaded outputs: %+v", config.GetAllKeys(conf.Outputs()))
-	log.Printf("loaded filters: %+v", config.GetAllKeys(conf.Filters()))
-	log.Printf("loaded aggregators: %+v", config.GetAllKeys(conf.Aggregators()))
+	log.Printf("I! loaded inputs: %+v", config.GetAllKeys(conf.Inputs()))
+	log.Printf("I! loaded outputs: %+v", config.GetAllKeys(conf.Outputs()))
+	log.Printf("I! loaded filters: %+v", config.GetAllKeys(conf.Filters()))
+	log.Printf("I! loaded aggregators: %+v", config.GetAllKeys(conf.Aggregators()))
 
 	// create new agent
 	agent := agent.New(conf)
