@@ -6,6 +6,9 @@ import (
 
 	"github.com/maksadbek/dpipe/agent"
 	"github.com/maksadbek/dpipe/config"
+
+	_ "github.com/maksadbek/dpipe/inputs/all"
+	_ "github.com/maksadbek/dpipe/outputs/all"
 )
 
 var (
@@ -34,6 +37,7 @@ func main() {
 
 	// initialize agent
 	agent.Init()
+	defer agent.CloseOutputs()
 
 	// run inputs and outputs
 	agent.Run()
