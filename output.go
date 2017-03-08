@@ -6,4 +6,6 @@ type Output interface {
 	Write(Hotel) error
 
 	LoadConf(*viper.Viper) error
+
+	Close() error
 }

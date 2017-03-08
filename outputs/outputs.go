@@ -25,4 +25,4 @@ func (i Outputs) Init(conf *viper.Viper) {
 	}
 }
 
-var All Outputs
+var All = Outputs{}
