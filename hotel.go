@@ -4,7 +4,7 @@ package dpipe
 type Hotel struct {
 	Name    string
 	Address string
-	Stars   uint8
+	Stars   int
 	Contact string
 	Phone   string
 	URI     string

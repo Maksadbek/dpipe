@@ -30,4 +30,4 @@ func (i Inputs) Init(conf *viper.Viper) {
 
 // AllInputs is the map that keeps input name
 // mapped to input implementation
-var All Inputs
+var All = Inputs{}
