@@ -19,6 +19,7 @@ type JSON struct {
 	once     *sync.Once
 	encoder  *json.Encoder
 }
+
 type taggedHotel struct {
 	Name    string `json:"name"`
 	Address string `json:"address"`
@@ -69,7 +70,7 @@ func (j *JSON) open() error {
 
 	j.file.WriteString("[")
 	j.encoder = json.NewEncoder(j.file)
-	return err
+	return nil
 }
 
 func init() {

@@ -1,10 +1,12 @@
 [inputs]
         [inputs.csv]
-                file = "hotels.csv"
+                file = "testdata/hotels.csv"
 
 [outputs]
         [outputs.json]
                 file = "hotels.json"
+        [outputs.xml]
+                file = "hotels.xml"
 
 [filters]
         [filters.nonnegative]
