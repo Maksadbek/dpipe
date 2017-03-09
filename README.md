@@ -24,6 +24,7 @@ Bonus tasks
 * Add options to sort/group the data before writing it
 
 ## Build & Install
+All dependency packages can be restored with `godep restore`
 
 Make by default builds and installs binary into $GOPATH/bin directory
 ```bash
@@ -35,4 +36,52 @@ Run tests and vet
 $ make vet
 $ make test
 ```
+
+## Configure
+
 ## How to use
+
+## Add new filters, inputs, outputs
+All filters, inputs and outputs are made as a plugins.
+
+### Inputs
+Inputs must be located in `inputs/<name of input>` directory
+In order to add new input, the follwoing steps must be made:
+- Create a directory and implement your input decoder, 
+implement `dpipe.Input` interface, it is located in `inputs.go` file.
+- Implement `LoadConf` method that loads configuration settings.
+- Create `init` function to add the instance of your input with its name into global map of inputs: 
+```
+func init() {
+	inputs.Add("csv", &CSV{})
+}
+```
+- Import your input in `inputs/all/all.go` - this runs the `init` function in your input plugin
+- Configure your input in `config.toml`
+
+### Outputs
+Outputs must be located in `outputs/<name of output>` directory
+In order to add new output, the follwoing steps must be made:
+- Create a directory and implement your output encoder 
+implement `dpipe.Output` interface, it is located in `outputs.go` file.
+- Implement `LoadConf` method that loads configuration settings.
+- Create `init` function to add the instance of your output with its name into global map of outputs: 
+```
+func init() {
+	inputs.Add("json", &JSON{})
+}
+```
+- Import your input in `inputs/all/all.go` - this runs the `init` function in your input plugin
+- Configure your input in `config.toml`
+
+### Filters
+Filters are added like Outputs and Inputs
+- Implement `dpipe.Filter` interface
+- Set up which field to filter in config toml:
+```
+[filters]
+        [filters.encodingUTF8]
+                enabled = true # if enabled is True, this filter is active
+                field = "name" # field that filter must be applied
+
+```
