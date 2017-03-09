@@ -18,6 +18,7 @@
                 min = 0
                 max = 5
         [filters.url]
+                enabled = true
                 field = "uri"
 [aggregators]
         [aggregators.group]
