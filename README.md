@@ -28,6 +28,12 @@ sorting plugin is implemented.
 ## Build & Install
 All dependency packages can be restored with `godep restore`
 
+**If you are not is $GOPATH directory and want anyway build the project run the following command:**
+```
+$ make build-with-godep
+```
+This creates `dpipe` binary
+
 Make by default builds and installs binary into $GOPATH/bin directory
 ```bash
 $ make
@@ -38,7 +44,6 @@ Run tests and vet
 $ make vet
 $ make test
 ```
-
 ## Configure
 
 Set up inputs and outputs
