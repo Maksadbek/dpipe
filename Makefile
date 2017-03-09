@@ -10,6 +10,12 @@ prepare:
 build:
 	go install ./...
 
+build-for-docker:
+	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -installsuffix cgo -o dpipe -ldflags ./cmd/dpipe/dpipe.go
+
+build-docker-image:
+	docker build . -t dpipe
+
 test: vet
 	go test ./...
 

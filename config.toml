@@ -1,14 +1,14 @@
 [inputs]
         [inputs.csv]
                 # default file name is hotels.csv
-                file = "testdata/hotels.csv"
+                file = "data/hotels.csv"
 [outputs]
         [outputs.json]
                 # default file name is hotels.json
-                file = "testdata/hotels.json"
+                file = "data/hotels.json"
         [outputs.xml]
                 # default file name is hotels.xml
-                file = "testdata/hotels.xml"
+                file = "data/hotels.xml"
 [filters]
         [filters.encodingUTF8]
                 enabled = true
