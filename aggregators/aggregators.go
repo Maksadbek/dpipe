@@ -25,7 +25,11 @@ func Init(v *viper.Viper) {
 		// check if the aggrgator enabled
 		// if aggregators is not enabled
 		// remove it from global map
-		enabled := c.GetBool("enabled")
+		var enabled bool
+		if c.IsSet("enabled") {
+			enabled = c.GetBool("enabled")
+		}
+
 		if !enabled {
 			delete(Aggregators, name)
 			continue

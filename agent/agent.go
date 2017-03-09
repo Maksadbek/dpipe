@@ -82,8 +82,11 @@ func (a *Agent) CloseOutputs() {
 // Run is not exited until all data is not aggregated
 func (a *Agent) Run() {
 	wg := sync.WaitGroup{}
+
+	var aggrEnabled bool
 	if len(aggregators.Aggregators) > 0 {
 		wg.Add(1)
+		aggrEnabled = true
 	}
 
 	go func() {
@@ -101,7 +104,7 @@ func (a *Agent) Run() {
 
 				// check if there any aggregators enabled
 				// add hotel data into aggregator
-				if len(aggregators.Aggregators) > 0 {
+				if aggrEnabled {
 					for _, aggregator := range aggregators.Aggregators {
 						aggregator.Add(h)
 					}
@@ -109,18 +112,20 @@ func (a *Agent) Run() {
 				}
 				a.flushOutputs(h)
 			case <-a.done:
-				for field, aggrName := range aggregators.FieldAggregations {
-					aggregator := aggregators.Aggregators[aggrName]
-					aggrHotels, err := aggregator.Do(field)
-					if err != nil {
-						atomic.AddUint32(&a.Stats.AggregationErrors, 1)
-					}
+				if aggrEnabled {
+					for field, aggrName := range aggregators.FieldAggregations {
+						aggregator := aggregators.Aggregators[aggrName]
+						aggrHotels, err := aggregator.Do(field)
+						if err != nil {
+							atomic.AddUint32(&a.Stats.AggregationErrors, 1)
+						}
 
-					for _, h := range aggrHotels {
-						a.flushOutputs(h)
+						for _, h := range aggrHotels {
+							a.flushOutputs(h)
+						}
 					}
+					wg.Done()
 				}
-				wg.Done()
 				return
 			}
 		}
