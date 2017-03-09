@@ -4,5 +4,5 @@ package dpipe
 // collected data before writing to output
 type Aggregator interface {
 	Add(Hotel) error
-	Do() (Hotel, error)
+	Do(field string) ([]Hotel, error)
 }

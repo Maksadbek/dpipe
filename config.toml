@@ -18,11 +18,9 @@
                 min = 0
                 max = 5
         [filters.url]
-                enabled = true
+                enabled = true # filter is enabled
                 field = "uri"
 [aggregators]
-        [aggregators.group]
-        field = "name"
-
-        [aggregators.sort]
-        field = "stars"
+        [aggregators.sorting]
+                enabled = true  # aggregation is enabled
+                field = "stars" # availabe fields are: stars, name, phone

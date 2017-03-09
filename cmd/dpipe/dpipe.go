@@ -7,6 +7,7 @@ import (
 	"github.com/maksadbek/dpipe/agent"
 	"github.com/maksadbek/dpipe/config"
 
+	_ "github.com/maksadbek/dpipe/aggregators/all"
 	_ "github.com/maksadbek/dpipe/filters/all"
 	_ "github.com/maksadbek/dpipe/inputs/all"
 	_ "github.com/maksadbek/dpipe/outputs/all"

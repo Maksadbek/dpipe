@@ -2,9 +2,11 @@ package agent
 
 import (
 	"log"
+	"sync"
 	"sync/atomic"
 
 	"github.com/maksadbek/dpipe"
+	"github.com/maksadbek/dpipe/aggregators"
 	"github.com/maksadbek/dpipe/config"
 	"github.com/maksadbek/dpipe/filters"
 	"github.com/maksadbek/dpipe/inputs"
@@ -35,6 +37,11 @@ type Agent struct {
 
 		// All received data count
 		DataReceived uint32
+
+		// aggregation metrics
+		DataAggregatedFaield uint32
+		DataAggregatedOK     uint32
+		AggregationErrors    uint32
 	}
 }
 
@@ -53,8 +60,10 @@ func (a *Agent) Init() {
 	inputs.Init(a.config.Inputs())
 	outputs.Init(a.config.Outputs())
 	filters.Init(a.config.Filters())
+	aggregators.Init(a.config.Aggregators())
 }
 
+// CloseOuputs call Close method on each outputs
 func (a *Agent) CloseOutputs() {
 	for _, name := range config.GetAllKeys(a.config.Outputs()) {
 		if output, ok := outputs.Outputs[name]; ok {
@@ -65,7 +74,18 @@ func (a *Agent) CloseOutputs() {
 
 // Runs starts running all inputs
 // and passes received data into outputs
+// wait group is used in aggregating data
+// if there is any aggragator enabled
+// data is passed into aggregators
+// when inputs done their job and sent signal to a.done channel
+// aggregators start aggregating and writing data into outputs
+// Run is not exited until all data is not aggregated
 func (a *Agent) Run() {
+	wg := sync.WaitGroup{}
+	if len(aggregators.Aggregators) > 0 {
+		wg.Add(1)
+	}
+
 	go func() {
 		for {
 			select {
@@ -79,22 +99,28 @@ func (a *Agent) Run() {
 					continue
 				}
 
-				for _, name := range config.GetAllKeys(a.config.Outputs()) {
-					output, ok := outputs.Outputs[name]
-					if ok {
-						err := output.Write(h)
-						if err != nil {
-							atomic.AddUint32(&a.Stats.DataWrittenFailed, 1)
-							log.Printf("E! failed to write data to output: '%s', error: %v", name, err)
-						} else {
-							atomic.AddUint32(&a.Stats.DataWrittenOK, 1)
-						}
-					} else {
-						log.Printf("E! no registered output with name: '%s'", name)
-						continue
+				// check if there any aggregators enabled
+				// add hotel data into aggregator
+				if len(aggregators.Aggregators) > 0 {
+					for _, aggregator := range aggregators.Aggregators {
+						aggregator.Add(h)
+					}
+					continue
+				}
+				a.flushOutputs(h)
+			case <-a.done:
+				for field, aggrName := range aggregators.FieldAggregations {
+					aggregator := aggregators.Aggregators[aggrName]
+					aggrHotels, err := aggregator.Do(field)
+					if err != nil {
+						atomic.AddUint32(&a.Stats.AggregationErrors, 1)
+					}
+
+					for _, h := range aggrHotels {
+						a.flushOutputs(h)
 					}
 				}
-			case <-a.done:
+				wg.Done()
 				return
 			}
 		}
@@ -114,4 +140,25 @@ func (a *Agent) Run() {
 		a.done <- struct{}{}
 	}
 
+	// wait untill aggregators do not stop their job
+	wg.Wait()
+}
+
+// flushOutputs writes hotel data into outputs
+func (a *Agent) flushOutputs(h dpipe.Hotel) {
+	for _, name := range config.GetAllKeys(a.config.Outputs()) {
+		output, ok := outputs.Outputs[name]
+		if ok {
+			err := output.Write(h)
+			if err != nil {
+				atomic.AddUint32(&a.Stats.DataWrittenFailed, 1)
+				log.Printf("E! failed to write data to output: '%s', error: %v", name, err)
+			} else {
+				atomic.AddUint32(&a.Stats.DataWrittenOK, 1)
+			}
+		} else {
+			log.Printf("E! no registered output with name: '%s'", name)
+			continue
+		}
+	}
 }
