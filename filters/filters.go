@@ -34,11 +34,17 @@ func Init(v *viper.Viper) {
 	}
 }
 
+// Validate ranges over all filters
+// checks the fields with their names mapped to filters
+// if any of them does not pass validation
+// the false value is returned
 func Validate(h dpipe.Hotel) bool {
 	for field, filterName := range FieldFilters {
 		if v := h.GetFieldValue(field); v != nil {
 			if f, ok := Filters[filterName]; ok {
-				return f.Validate(v)
+				if !f.Validate(v) {
+					return false
+				}
 			}
 		}
 	}

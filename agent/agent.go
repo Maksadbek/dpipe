@@ -52,11 +52,13 @@ func (a *Agent) Run() {
 		for {
 			select {
 			case h := <-a.gatherer.hotelsc:
+				// validate hotel data
+				if !filters.Validate(h) {
+					log.Printf("E! invalid hotel data, skipping")
+					continue
+				}
+
 				for _, name := range config.GetAllKeys(a.config.Outputs()) {
-					if !filters.Validate(h) {
-						log.Printf("E! hotel does not fullfill filters")
-						continue
-					}
 					output, ok := outputs.All[name]
 					if ok {
 						err := output.Write(h)
