@@ -4,15 +4,18 @@
 
 [outputs]
         [outputs.json]
-                file = "hotels.json"
+                file = "testdata/hotels.json"
         [outputs.xml]
-                file = "hotels.xml"
+                file = "testdata/hotels.xml"
 
 [filters]
-        [filters.nonnegative]
-        field = "stars"
-        filter = "nonnegativ"
-
+        [filters.range]
+                enabled = false
+                field = "stars"
+                min = 0
+                max = 0
+        [filters.url]
+                field = "uri"
 [aggregators]
         [aggregators.group]
         field = "name"

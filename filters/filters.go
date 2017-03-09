@@ -17,6 +17,13 @@ func Add(name string, filter dpipe.Filter) {
 func Init(v *viper.Viper) {
 	for name, f := range Filters {
 		c := v.Sub(name)
+
+		// check if the filter enabled
+		enabled := c.GetBool("enabled")
+		if !enabled {
+			continue
+		}
+
 		field := c.GetString("field")
 		err := f.LoadConf(c)
 		if err != nil {
