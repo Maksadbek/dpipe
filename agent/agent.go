@@ -2,6 +2,7 @@ package agent
 
 import (
 	"log"
+	"sync/atomic"
 
 	"github.com/maksadbek/dpipe"
 	"github.com/maksadbek/dpipe/config"
@@ -18,6 +19,23 @@ type Agent struct {
 	config   *config.Config
 	gatherer *Gatherer
 	done     chan struct{}
+
+	// Stats is the statistics that Agent
+	// creates after processing data from input
+	// and sending it to output
+	Stats struct {
+		// failed to write count
+		DataWrittenFailed uint32
+
+		// Data that did not pass validation
+		DataValidationFailed uint32
+
+		// succeed writes
+		DataWrittenOK uint32
+
+		// All received data count
+		DataReceived uint32
+	}
 }
 
 func New(conf *config.Config) *Agent {
@@ -52,8 +70,11 @@ func (a *Agent) Run() {
 		for {
 			select {
 			case h := <-a.gatherer.hotelsc:
+				atomic.AddUint32(&a.Stats.DataReceived, 1)
+
 				// validate hotel data
 				if !filters.Validate(h) {
+					atomic.AddUint32(&a.Stats.DataValidationFailed, 1)
 					log.Printf("E! invalid hotel data, skipping")
 					continue
 				}
@@ -63,7 +84,10 @@ func (a *Agent) Run() {
 					if ok {
 						err := output.Write(h)
 						if err != nil {
+							atomic.AddUint32(&a.Stats.DataWrittenFailed, 1)
 							log.Printf("E! failed to write data to output: '%s', error: %v", name, err)
+						} else {
+							atomic.AddUint32(&a.Stats.DataWrittenOK, 1)
 						}
 					} else {
 						log.Printf("E! no registered output with name: '%s'", name)

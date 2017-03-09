@@ -42,4 +42,12 @@ func main() {
 
 	// run inputs and outputs
 	agent.Run()
+
+	// print stats
+
+	log.Print("I! finished processing, stats:")
+	log.Printf("I! failed to write:\t\t %d", agent.Stats.DataWrittenFailed)
+	log.Printf("I! succeed to write:\t %d", agent.Stats.DataWrittenOK)
+	log.Printf("I! validation fails:\t %d", agent.Stats.DataValidationFailed)
+	log.Printf("I! received:\t\t %d", agent.Stats.DataReceived)
 }
