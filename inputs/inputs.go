@@ -9,6 +9,15 @@ import (
 
 var Inputs = map[string]dpipe.Input{}
 
+func RegisteredInputs() []string {
+	ins := []string{}
+	for name, _ := range Inputs {
+		ins = append(ins, name)
+	}
+
+	return ins
+}
+
 // Add can be used to register input implementation
 // with its name.
 // The input is not added if such name already exists.

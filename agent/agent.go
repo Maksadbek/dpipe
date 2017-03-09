@@ -39,7 +39,7 @@ type Agent struct {
 		DataReceived uint32
 
 		// aggregation metrics
-		DataAggregatedFaield uint32
+		DataAggregatedFailed uint32
 		DataAggregatedOK     uint32
 		AggregationErrors    uint32
 	}
@@ -122,6 +122,7 @@ func (a *Agent) Run() {
 
 						for _, h := range aggrHotels {
 							a.flushOutputs(h)
+							atomic.AddUint32(&a.Stats.DataAggregatedOK, 1)
 						}
 					}
 					wg.Done()

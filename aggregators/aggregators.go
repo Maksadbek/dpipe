@@ -18,6 +18,15 @@ func Add(name string, aggregator dpipe.Aggregator) {
 	}
 }
 
+func RegisteredAggregators() []string {
+	aggrs := []string{}
+	for name, _ := range Aggregators {
+		aggrs = append(aggrs, name)
+	}
+
+	return aggrs
+}
+
 func Init(v *viper.Viper) {
 	for name, _ := range Aggregators {
 		c := v.Sub(name)

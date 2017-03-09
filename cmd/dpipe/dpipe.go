@@ -5,7 +5,11 @@ import (
 	"log"
 
 	"github.com/maksadbek/dpipe/agent"
+	"github.com/maksadbek/dpipe/aggregators"
 	"github.com/maksadbek/dpipe/config"
+	"github.com/maksadbek/dpipe/filters"
+	"github.com/maksadbek/dpipe/inputs"
+	"github.com/maksadbek/dpipe/outputs"
 
 	_ "github.com/maksadbek/dpipe/aggregators/all"
 	_ "github.com/maksadbek/dpipe/filters/all"
@@ -29,10 +33,10 @@ func main() {
 	}
 
 	// log loaded inputs, outpus, filters and aggregators
-	log.Printf("I! loaded inputs: %+v", config.GetAllKeys(conf.Inputs()))
-	log.Printf("I! loaded outputs: %+v", config.GetAllKeys(conf.Outputs()))
-	log.Printf("I! loaded filters: %+v", config.GetAllKeys(conf.Filters()))
-	log.Printf("I! loaded aggregators: %+v", config.GetAllKeys(conf.Aggregators()))
+	log.Printf("I! registered inputs: %+v", inputs.RegisteredInputs())
+	log.Printf("I! registered outputs: %+v", outputs.RegisteredOutputs())
+	log.Printf("I! registered filters: %+v", filters.RegisteredFilters())
+	log.Printf("I! registered aggregators: %+v", aggregators.RegisteredAggregators())
 
 	// create new agent
 	agent := agent.New(conf)
@@ -51,4 +55,7 @@ func main() {
 	log.Printf("I! succeed to write:\t %d", agent.Stats.DataWrittenOK)
 	log.Printf("I! validation fails:\t %d", agent.Stats.DataValidationFailed)
 	log.Printf("I! received:\t\t %d", agent.Stats.DataReceived)
+	log.Printf("I! aggregated:\t\t %d", agent.Stats.DataAggregatedOK)
+	log.Printf("I! failed aggreations:\t %d", agent.Stats.DataAggregatedFailed)
+	log.Printf("I! aggreation errors:\t %d", agent.Stats.AggregationErrors)
 }

@@ -10,6 +10,15 @@ import (
 var Filters = map[string]dpipe.Filter{}
 var FieldFilters = map[string]string{}
 
+func RegisteredFilters() []string {
+	fs := []string{}
+	for name, _ := range Filters {
+		fs = append(fs, name)
+	}
+
+	return fs
+}
+
 func Add(name string, filter dpipe.Filter) {
 	Filters[name] = filter
 }

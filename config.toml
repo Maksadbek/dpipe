@@ -1,25 +1,26 @@
 [inputs]
         [inputs.csv]
+                # default file name is hotels.csv
                 file = "testdata/hotels.csv"
-
 [outputs]
         [outputs.json]
+                # default file name is hotels.json
                 file = "testdata/hotels.json"
         [outputs.xml]
+                # default file name is hotels.xml
                 file = "testdata/hotels.xml"
-
 [filters]
         [filters.encodingUTF8]
                 enabled = true
-                field = "name"
+                field = "name" # field name to validate
         [filters.range]
                 enabled = true
-                field = "stars"
-                min = 0
-                max = 5
+                field = "stars" # field name to validate
+                min = 0         # minimum value
+                max = 5         # maximal value
         [filters.url]
-                enabled = true # filter is enabled
-                field = "uri"
+                enabled = true  # filter is enabled
+                field = "uri"   # field name to validate
 [aggregators]
         [aggregators.sorting]
                 enabled = true  # aggregation is enabled

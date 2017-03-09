@@ -9,6 +9,15 @@ import (
 
 var Outputs = map[string]dpipe.Output{}
 
+func RegisteredOutputs() []string {
+	outs := []string{}
+	for name, _ := range Outputs {
+		outs = append(outs, name)
+	}
+
+	return outs
+}
+
 func Add(name string, output dpipe.Output) {
 	if _, ok := Outputs[name]; !ok {
 		Outputs[name] = output
