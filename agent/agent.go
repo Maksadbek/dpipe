@@ -5,6 +5,7 @@ import (
 
 	"github.com/maksadbek/dpipe"
 	"github.com/maksadbek/dpipe/config"
+	"github.com/maksadbek/dpipe/filters"
 	"github.com/maksadbek/dpipe/inputs"
 	"github.com/maksadbek/dpipe/outputs"
 )
@@ -33,6 +34,7 @@ func New(conf *config.Config) *Agent {
 func (a *Agent) Init() {
 	inputs.All.Init(a.config.Inputs())
 	outputs.All.Init(a.config.Outputs())
+	filters.Init(a.config.Filters())
 }
 
 func (a *Agent) CloseOutputs() {
@@ -51,6 +53,10 @@ func (a *Agent) Run() {
 			select {
 			case h := <-a.gatherer.hotelsc:
 				for _, name := range config.GetAllKeys(a.config.Outputs()) {
+					if !filters.Validate(h) {
+						log.Printf("E! hotel does not fullfill filters")
+						continue
+					}
 					output, ok := outputs.All[name]
 					if ok {
 						err := output.Write(h)
@@ -79,7 +85,6 @@ func (a *Agent) Run() {
 			log.Printf("E! no registered input with name: '%s'", name)
 			continue
 		}
-		println("done")
 		a.done <- struct{}{}
 	}
 

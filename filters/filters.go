@@ -4,16 +4,37 @@ import (
 	"log"
 
 	"github.com/maksadbek/dpipe"
+	"github.com/spf13/viper"
 )
 
-var All Filters
+var Filters = map[string]dpipe.Filter{}
+var FieldFilters = map[string]string{}
 
-type Filters map[string]dpipe.Filter
+func Add(name string, filter dpipe.Filter) {
+	Filters[name] = filter
+}
 
-func (f Filters) Add(field string, filter dpipe.Filter) {
-	if _, ok := f[field]; !ok {
-		f[field] = filter
-	} else {
-		log.Printf("W! filters: dublicate filter for field: '%s'", field)
+func Init(v *viper.Viper) {
+	for name, f := range Filters {
+		c := v.Sub(name)
+		field := c.GetString("field")
+		err := f.LoadConf(c)
+		if err != nil {
+			log.Printf("E! failed to configure filter - '%s', error: %v", name, err)
+		} else {
+			FieldFilters[field] = name
+		}
 	}
+}
+
+func Validate(h dpipe.Hotel) bool {
+	for field, filterName := range FieldFilters {
+		if v := h.GetFieldValue(field); v != nil {
+			if f, ok := Filters[filterName]; ok {
+				return f.Validate(v)
+			}
+		}
+	}
+
+	return true
 }
