@@ -9,6 +9,10 @@ import (
 	"github.com/spf13/viper"
 )
 
+const (
+	defaultOutputFile = "hotels.xml"
+)
+
 // XML implements dpipe.Output interface
 type XML struct {
 	outputFile string
@@ -46,7 +50,11 @@ func (x *XML) Close() error {
 }
 
 func (x *XML) LoadConf(v *viper.Viper) error {
-	x.outputFile = v.GetString("file")
+	if v.IsSet("file") {
+		x.outputFile = v.GetString("file")
+	} else {
+		x.outputFile = defaultOutputFile
+	}
 	return x.open()
 }
 

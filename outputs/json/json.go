@@ -11,6 +11,10 @@ import (
 	"github.com/spf13/viper"
 )
 
+const (
+	defaultOutputFile = "hotels.json"
+)
+
 // JSON implements dpipe.Output interface
 // reads dpipe.Hotel data
 type JSON struct {
@@ -46,7 +50,11 @@ func (j *JSON) Write(h dpipe.Hotel) error {
 }
 
 func (j *JSON) LoadConf(conf *viper.Viper) error {
-	j.filePath = conf.GetString("file")
+	if conf.IsSet("file") {
+		j.filePath = conf.GetString("file")
+	} else {
+		j.filePath = defaultOutputFile
+	}
 	return j.open()
 }
 

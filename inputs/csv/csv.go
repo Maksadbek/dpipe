@@ -11,6 +11,10 @@ import (
 	"github.com/spf13/viper"
 )
 
+const (
+	defaultInputFile = "hotels.csv"
+)
+
 // CSV reads csv data from file
 // creates a dpipe.Hotel data
 // writes the hotel data into gatherer
@@ -61,7 +65,11 @@ func (c *CSV) Read(g dpipe.Gatherer) error {
 
 func (c *CSV) LoadConf(v *viper.Viper) {
 	// get filename from config
-	c.file = v.GetString("file")
+	if v.IsSet("file") {
+		c.file = v.GetString("file")
+	} else {
+		c.file = defaultInputFile
+	}
 }
 
 func init() {
