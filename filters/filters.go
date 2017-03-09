@@ -19,7 +19,11 @@ func Init(v *viper.Viper) {
 		c := v.Sub(name)
 
 		// check if the filter enabled
-		enabled := c.GetBool("enabled")
+		var enabled bool
+		if c.IsSet("enabled") {
+			enabled = c.GetBool("enabled")
+		}
+
 		if !enabled {
 			continue
 		}
