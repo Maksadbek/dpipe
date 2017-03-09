@@ -9,11 +9,14 @@
                 file = "testdata/hotels.xml"
 
 [filters]
+        [filters.encodingUTF8]
+                enabled = true
+                field = "name"
         [filters.range]
-                enabled = false
+                enabled = true
                 field = "stars"
                 min = 0
-                max = 0
+                max = 5
         [filters.url]
                 field = "uri"
 [aggregators]
