@@ -3,6 +3,7 @@ package csv
 import (
 	"encoding/csv"
 	"io"
+	"log"
 	"os"
 	"strconv"
 
@@ -46,15 +47,17 @@ func (c *CSV) Read(g dpipe.Gatherer) error {
 			return err
 		}
 
-		stars, _ := strconv.Atoi(record[2])
-
 		h := dpipe.Hotel{
 			Name:    record[0],
 			Address: record[1],
-			Stars:   stars,
 			Contact: record[3],
 			Phone:   record[4],
 			URI:     record[5],
+		}
+
+		h.Stars, err = strconv.Atoi(record[2])
+		if err != nil {
+			log.Printf("E! failed to convert stars value into int, err: %v", err)
 		}
 
 		g.Write(h)
