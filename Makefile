@@ -1,3 +1,6 @@
+# list of packages without vendor
+PKGS=$(shell go list ./... | grep -v "vendor")
+
 # default dpipe build
 default: prepare build
 
@@ -17,7 +20,7 @@ build-docker-image:
 	docker build -t dpipe .
 
 test: vet
-	go test ./...
+	go test $(PKGS)
 
 vet:
-	go vet ./...
+	go vet $(PKGS)
