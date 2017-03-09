@@ -65,5 +65,5 @@ func (c *CSV) LoadConf(v *viper.Viper) {
 }
 
 func init() {
-	inputs.All.Add("csv", &CSV{})
+	inputs.Add("csv", &CSV{})
 }

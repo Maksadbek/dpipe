@@ -74,5 +74,5 @@ func (j *JSON) open() error {
 }
 
 func init() {
-	outputs.All.Add("json", &JSON{})
+	outputs.Add("json", &JSON{})
 }

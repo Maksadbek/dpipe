@@ -65,5 +65,5 @@ func (x *XML) open() error {
 }
 
 func init() {
-	outputs.All.Add("xml", &XML{})
+	outputs.Add("xml", &XML{})
 }

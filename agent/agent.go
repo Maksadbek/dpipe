@@ -32,14 +32,14 @@ func New(conf *config.Config) *Agent {
 
 // Init initializes inputs and outputs
 func (a *Agent) Init() {
-	inputs.All.Init(a.config.Inputs())
-	outputs.All.Init(a.config.Outputs())
+	inputs.Init(a.config.Inputs())
+	outputs.Init(a.config.Outputs())
 	filters.Init(a.config.Filters())
 }
 
 func (a *Agent) CloseOutputs() {
 	for _, name := range config.GetAllKeys(a.config.Outputs()) {
-		if output, ok := outputs.All[name]; ok {
+		if output, ok := outputs.Outputs[name]; ok {
 			output.Close()
 		}
 	}
@@ -59,7 +59,7 @@ func (a *Agent) Run() {
 				}
 
 				for _, name := range config.GetAllKeys(a.config.Outputs()) {
-					output, ok := outputs.All[name]
+					output, ok := outputs.Outputs[name]
 					if ok {
 						err := output.Write(h)
 						if err != nil {
@@ -77,7 +77,7 @@ func (a *Agent) Run() {
 	}()
 
 	for _, name := range config.GetAllKeys(a.config.Inputs()) {
-		input, ok := inputs.All[name]
+		input, ok := inputs.Inputs[name]
 		if ok {
 			err := input.Read(a.gatherer)
 			if err != nil {

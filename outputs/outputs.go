@@ -7,11 +7,11 @@ import (
 	"github.com/spf13/viper"
 )
 
-type Outputs map[string]dpipe.Output
+var Outputs = map[string]dpipe.Output{}
 
-func (o Outputs) Add(name string, output dpipe.Output) {
-	if _, ok := o[name]; !ok {
-		o[name] = output
+func Add(name string, output dpipe.Output) {
+	if _, ok := Outputs[name]; !ok {
+		Outputs[name] = output
 	} else {
 		log.Printf("W! outputs: dublicate ouput name: '%s'", name)
 	}
@@ -19,10 +19,8 @@ func (o Outputs) Add(name string, output dpipe.Output) {
 
 // Init initializes all inputs
 // by passing configurations
-func (i Outputs) Init(conf *viper.Viper) {
-	for name, output := range All {
+func Init(conf *viper.Viper) {
+	for name, output := range Outputs {
 		output.LoadConf(conf.Sub(name))
 	}
 }
-
-var All = Outputs{}
