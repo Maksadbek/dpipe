@@ -6,8 +6,8 @@ WORKDIR /app
 
 COPY dpipe /app/
 
-COPY config.toml /app/config.toml
+COPY config.toml /app/
 
 VOLUME ["/app/data"]
 
-ENTRYPOINT ["/app/dpipe", "-config", "/app/config.toml"]
+ENTRYPOINT ["/app/dpipe", "-config", "config"]

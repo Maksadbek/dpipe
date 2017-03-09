@@ -39,7 +39,92 @@ $ make test
 
 ## Configure
 
+Set up inputs and outputs
+Each input and outputs require file that it will read or write into.
+Sample config is here:
+```toml
+# inputs, available inputs: csv
+[inputs]
+        [inputs.csv] # csv input
+                # default file name is hotels.csv
+                file = "data/hotels.csv"
+# outputs, available outputs: json, xml
+[outputs]
+        [outputs.json] # json output
+                # default file name is hotels.json
+                file = "data/hotels.json"
+        [outputs.xml] # xml output
+                # default file name is hotels.xml
+                file = "data/hotels.xml"
+# filters aka validators, available filters: encodintUTF8, range, url
+# set which filter must check which field
+[filters]
+        [filters.encodingUTF8]
+                enabled = true
+                field = "name" # field name to validate
+        [filters.range]
+                enabled = true
+                field = "stars" # field name to validate
+                min = 0         # minimum value
+                max = 5         # maximal value
+        [filters.url]
+                enabled = true  # filter is enabled
+                field = "uri"   # field name to validate
+# aggregators, available aggregators: sorting
+[aggregators]
+        [aggregators.sorting]
+                enabled = true  # aggregation is enabled
+                field = "stars" # availabe fields are: stars, name, phone
+
+```
+
 ## How to use
+```
+$ make
+go get github.com/tools/godep
+godep restore
+go install ./...
+$ dpipe
+2017/03/09 18:24:17 DPIPE
+2017/03/09 18:24:17 I! registered inputs: [csv]
+2017/03/09 18:24:17 I! registered outputs: [json xml]
+2017/03/09 18:24:17 I! registered filters: [encodingUTF8 range url]
+2017/03/09 18:24:17 I! registered aggregators: [sorting]
+2017/03/09 18:24:17 E! invalid hotel data, skipping
+2017/03/09 18:24:17 I! finished processing, stats:
+2017/03/09 18:24:17 I! failed to write:		 0
+2017/03/09 18:24:17 I! succeed to write:	 7998
+2017/03/09 18:24:17 I! validation fails:	 1
+2017/03/09 18:24:17 I! received:		 4000
+2017/03/09 18:24:17 I! aggregated:		 3999
+2017/03/09 18:24:17 I! failed aggreations:	 0
+2017/03/09 18:24:17 I! aggreation errors:	 0
+```
+
+## How to use with Docker
+1. Build a binary:
+```make build-for-docker```
+2. Build a docker image
+```make build-docker-image```
+After that **dpipe** will be available in your docker images list.
+3. Run, mount **data** volume where input files are kept
+```
+$ sudo docker run -i -v /data:/app/data dpipe
+2017/03/09 18:24:17 DPIPE
+2017/03/09 18:24:17 I! registered inputs: [csv]
+2017/03/09 18:24:17 I! registered outputs: [json xml]
+2017/03/09 18:24:17 I! registered filters: [encodingUTF8 range url]
+2017/03/09 18:24:17 I! registered aggregators: [sorting]
+2017/03/09 18:24:17 E! invalid hotel data, skipping
+2017/03/09 18:24:17 I! finished processing, stats:
+2017/03/09 18:24:17 I! failed to write:		 0
+2017/03/09 18:24:17 I! succeed to write:	 7998
+2017/03/09 18:24:17 I! validation fails:	 1
+2017/03/09 18:24:17 I! received:		 4000
+2017/03/09 18:24:17 I! aggregated:		 3999
+2017/03/09 18:24:17 I! failed aggreations:	 0
+2017/03/09 18:24:17 I! aggreation errors:	 0
+```
 
 ## Add new filters, inputs, outputs
 All filters, inputs and outputs are made as a plugins.
