@@ -3,7 +3,8 @@ default: prepare build
 
 # get all dependency packages
 prepare:
-	go get ./...
+	go get github.com/tools/godep
+	godep restore
 
 # build and install into GOBIN directory
 build:
