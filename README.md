@@ -4,24 +4,26 @@ Tool to pipeline data I/O
 ## Requirements
 
 Read data
-- Read data from the given CSV file `hotels.csv`. The first line is a header
+- [x] Read data from the given CSV file `hotels.csv`. The first line is a header
    which describes all field names.
 
-Validate data
-- A hotel name may only contain UTF-8 characters.
-- The hotel URL must be valid (please come up with a good definition of "valid").
-- Hotel ratings are given as a number from 0 to 5 stars. There may be no negative numbers.
+Validate data - validations are made as plugins, they are pluggable.
+- [x] A hotel name may only contain UTF-8 characters.
+- [x] The hotel URL must be valid (please come up with a good definition of "valid").
+- [x] Hotel ratings are given as a number from 0 to 5 stars. There may be no negative numbers.
+
 
 Write the valid data in *two* of the following formats of your choice:  
-- XML, JSON, YAML, HTML, SQLite Database, or your own custom format.  
-- The output must be in the same directory as the input.
+- [x] XML, JSON, YAML, HTML, SQLite Database, or your own custom format. XML and JSON is done 
+- [x] The output must be in the same directory as the input. By default output and input are same directories, it can be configured.
 
 Bonus tasks
-* Make the tool extensible to new output formats
-* We care more about code quality (readability, software architecture)
-  than about performance - although fast execution is a plus.
-* Unit tests would be nice
-* Add options to sort/group the data before writing it
+- [x] Make the tool extensible to new output formats
+- [ ] We care more about code quality (readability, software architecture)
+  than about performance - although fast execution is a plus - no performance optimizations are made
+- [x] Unit tests would be nice - only plugins are covered with tests
+- [x] Add options to sort/group the data before writing it. Aggregators are made as a plugins, it can be pluggable, by default
+sorting plugin is implemented.
 
 ## Build & Install
 All dependency packages can be restored with `godep restore`
