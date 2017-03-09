@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"io"
 	"os"
-	"sync"
 
 	"github.com/maksadbek/dpipe"
 	"github.com/maksadbek/dpipe/outputs"
@@ -20,7 +19,6 @@ const (
 type JSON struct {
 	filePath string
 	file     *os.File
-	once     *sync.Once
 	encoder  *json.Encoder
 }
 
