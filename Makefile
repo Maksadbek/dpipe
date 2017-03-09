@@ -8,7 +8,7 @@ prepare:
 
 # build and install into GOBIN directory
 build:
-	go install
+	go install ./...
 
 test: vet
 	go test ./...
