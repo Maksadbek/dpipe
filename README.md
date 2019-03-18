@@ -1,3 +1,5 @@
+# The interview assignment by Trivago(that I failed, dunno why :/)
+
 # dpipe
 Tool to pipeline data I/O
 
